@@ -1,0 +1,9 @@
+??? FOR APK
+eas build --platform android --profile release-apk
+
+??? FOR AAB
+eas build --platform android --profile release-aab
+
+??? FOR IPA
+eas build --platform ios --profile release-ios
+

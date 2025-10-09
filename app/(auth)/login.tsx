@@ -1,14 +1,18 @@
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect,useState } from 'react';
 import { COLORS } from '@/constants/Colors';
 import { GoogleIcon } from '@/assets/icons/GoogleICon';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
 import Mizaph from "../../assets/images/mizpah.png"
+import { useGoogleAuth } from '@/api/useGoogleAuth';
+import {auth} from "../../config/firebaseConfig"
+import { onAuthStateChanged } from 'firebase/auth';
 
 
 export default function LoginScreen() {
     const router = useRouter();
+        const { promptAsync, user, error } = useGoogleAuth();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
@@ -33,9 +37,23 @@ export default function LoginScreen() {
     ]).start();
   }, []);
 
-  const handleGoogleSignIn = () => {
-    router.push("/home")
-    console.log('Google Sign In pressed');
+useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        console.log("User Info:", {
+          name: currentUser.displayName,
+          email: currentUser.email,
+          photo: currentUser.photoURL,
+        });
+        router.push("/home");
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleGoogleSignIn = async () => {
+    await promptAsync();
   };
 
   return (

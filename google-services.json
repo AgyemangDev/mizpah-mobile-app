@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "167177222865",
+    "project_id": "mizpahinternationalchurch",
+    "storage_bucket": "mizpahinternationalchurch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167177222865:android:094a526a0152e4d16b23f0",
+        "android_client_info": {
+          "package_name": "com.hostelhubb.mizpahapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "167177222865-371l11bcd7sok7q1qvovkofv9h0vaf5d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-_Dsj-MbM0utrzijSSokkwNhJxMHVtHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "167177222865-371l11bcd7sok7q1qvovkofv9h0vaf5d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

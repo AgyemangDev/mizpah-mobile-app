@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>167177222865-dpf9mnnnuja3isjeo13g2aecsve3642g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.167177222865-dpf9mnnnuja3isjeo13g2aecsve3642g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>167177222865-hrejq6n48l03naj5tfffksaj3q8sdlgt.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB7ZZoOFO2T1UvVUMmIXUggMpmRITqL3rA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>167177222865</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.hostelhubb.mizpahapp</string>
+	<key>PROJECT_ID</key>
+	<string>mizpahinternationalchurch</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mizpahinternationalchurch.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:167177222865:ios:4f30d3501642879a6b23f0</string>
+</dict>
+</plist>

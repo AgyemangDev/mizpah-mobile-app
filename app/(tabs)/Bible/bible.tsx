@@ -107,7 +107,9 @@ const BibleScreen: React.FC = () => {
         ) : (
           <>
             <Text style={styles.welcomeText}>Choose a book to begin reading</Text>
-            {books ? <MainBookList books={books} onSelect={setSelectedBook} /> : <Text style={styles.emptyText}>No books available</Text>}
+            {books ? <MainBookList books={books} onSelect={setSelectedBook} /> : <Text style={styles.emptyText}>
+    We’re sorry — please check your internet connection and try again.
+  </Text>}
           </>
         )}
       </View>

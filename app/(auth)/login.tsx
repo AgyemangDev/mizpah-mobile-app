@@ -1,218 +1,200 @@
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import React, { useRef, useEffect,useState } from 'react';
-import { COLORS } from '@/constants/Colors';
-import { GoogleIcon } from '@/assets/icons/GoogleICon';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  Alert,
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../../config/firebaseConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { doc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'expo-router';
-import { Image } from 'react-native';
-import Mizaph from "../../assets/images/mizpah.png"
-import { useGoogleAuth } from '@/api/useGoogleAuth';
-import {auth} from "../../config/firebaseConfig"
-import { onAuthStateChanged } from 'firebase/auth';
+import FormInput from '@/components/Input/FormInput';
+import FormButton from '@/components/Button/FormButton';
+import churchImage from '../../assets/images/mizpah.png';
 
+export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
-export default function LoginScreen() {
-    const router = useRouter();
-        const { promptAsync, user, error } = useGoogleAuth();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
-  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const router = useRouter();
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 4,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        console.log("User Info:", {
-          name: currentUser.displayName,
-          email: currentUser.email,
-          photo: currentUser.photoURL,
-        });
-        router.push("/home");
+    const loadCredentials = async () => {
+      try {
+        const storedCreds = await AsyncStorage.getItem('credentials');
+        if (storedCreds) {
+          const { email, password } = JSON.parse(storedCreds);
+          setEmail(email);
+          setPassword(password);
+          setRememberMe(true);
+        }
+      } catch (error) {
+        console.error('Error loading saved credentials', error);
       }
-    });
-    return unsubscribe;
+    };
+    loadCredentials();
   }, []);
 
-  const handleGoogleSignIn = async () => {
-    await promptAsync();
+  const handleLogin = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return Alert.alert('Invalid Email', 'Please enter a valid email address.');
+    }
+
+    setLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userDocRef = doc(db, 'users', user.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const userDataToStore = { uid: user.uid, email: user.email, ...userData };
+
+        await AsyncStorage.setItem('user', JSON.stringify(userDataToStore));
+
+        if (rememberMe) {
+          await AsyncStorage.setItem('credentials', JSON.stringify({ email, password }));
+        } else {
+          await AsyncStorage.removeItem('credentials');
+        }
+
+        Alert.alert('Welcome Back!', `You’re logged in as ${email}`);
+        router.replace('/(tabs)/home');
+      } else {
+        Alert.alert('Error', 'User profile not found. Please contact support.');
+      }
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found') {
+        Alert.alert('Login Failed', 'No account found with this email.');
+      } else if (error.code === 'auth/wrong-password') {
+        Alert.alert('Login Failed', 'Incorrect password.');
+      } else {
+        Alert.alert('Login Failed', error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Animated.View 
-        style={[
-          styles.content,
-          {
-            opacity: fadeAnim,
-            transform: [
-              { translateY: slideAnim },
-              { scale: scaleAnim }
-            ]
-          }
-        ]}
+ 
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        {/* Logo */}
-<View style={styles.logoContainer}>
-  <View >
-    <Image 
-      source={Mizaph} 
-      style={{ width: 180, height: 180, borderRadius: 30 }} 
-      resizeMode="contain" 
-    />
-  </View>
-</View>
-
-        {/* Church name */}
-        <Text style={styles.churchName}>Mizpah International</Text>
-        <Text style={styles.churchSubtitle}>Ministry</Text>
-
-        {/* Welcome text */}
-        <Text style={styles.subtitleText}>Sign in to continue</Text>
-
-        {/* Google Sign In Button */}
-        <TouchableOpacity 
-          style={styles.googleButton}
-          onPress={handleGoogleSignIn}
-          activeOpacity={0.8}
-        >
-          <View style={styles.googleIconContainer}>
-            <GoogleIcon />
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.header}>
+            <Image source={churchImage} style={styles.logo} resizeMode="contain" />
+            <Text style={styles.title}>Mizpah Family</Text>
+            <Text style={styles.scripture}>
+              “The Lord is my shepherd, I lack nothing.” — Psalm 23:1
+            </Text>
           </View>
-          <Text style={styles.googleButtonText}>Continue with Google</Text>
-        </TouchableOpacity>
 
-        {/* Terms and privacy */}
-        <Text style={styles.termsText}>
-          By continuing, you agree to our{'\n'}
-          <Text style={styles.termsLink}>Terms of Service</Text>
-          {' '}and{' '}
-          <Text style={styles.termsLink}>Privacy Policy</Text>
-        </Text>
-      </Animated.View>
-    </View>
+          {/* Login Card */}
+          <View style={styles.formCard}>
+            <FormInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Email"
+              keyboardType="email-address"
+            />
+            <FormInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              secureTextEntry
+            />
+
+            {/* Remember Me */}
+            <TouchableOpacity
+              style={styles.rememberContainer}
+              onPress={() => setRememberMe(!rememberMe)}
+            >
+              <View style={[styles.checkbox, rememberMe && styles.checked]} />
+              <Text style={styles.rememberText}>Remember Me</Text>
+            </TouchableOpacity>
+
+            <FormButton
+              title={loading ? 'Logging in...' : 'Login'}
+              onPress={handleLogin}
+              disabled={!email || !password || loading}
+              loading={loading}
+              style={styles.loginButton}
+            />
+            {loading && <ActivityIndicator size="small" color="#000" style={{ marginTop: 10 }} />}
+          </View>
+
+<TouchableOpacity
+  style={styles.signupContainer}
+  onPress={() => router.push('/(auth)/SignUp')} // adjust path to your signup page
+>
+  <Text style={styles.signupText}>
+    Don’t have an account? <Text style={styles.signupLink}>Sign up here</Text>
+  </Text>
+</TouchableOpacity>
+          <Text style={styles.footer}>
+            “Be still, and know that I am God.” — Psalm 46:10
+          </Text>
+        </ScrollView>
+      </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
+  background: { flex: 1, backgroundColor: '#fff' }, // fallback white background
+  container: { flex: 1, justifyContent: 'center', backgroundColor:"#fff" },
+  scrollContainer: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 25, paddingVertical: 50 },
+  header: { alignItems: 'center', marginBottom: 40 },
+  logo: { width: 120, height: 120, marginBottom: 15, borderRadius: 60, borderWidth: 2, borderColor: '#000' },
+  title: { fontSize: 28, fontWeight: '700', color: '#000' },
+  scripture: { fontSize: 14, fontStyle: 'italic', color: '#333', textAlign: 'center', marginTop: 5 },
+  formCard: {
+    backgroundColor: '#fff', // white card
+    padding: 25,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+    elevation: 5,
   },
-  content: {
-    width: '100%',
-    maxWidth: 400,
-    alignItems: 'center',
+  rememberContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 15 },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: '#000',
+    borderRadius: 4,
+    marginRight: 10,
   },
-  logoContainer: {
-    marginBottom: 32,
-  },
-  logo: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: COLORS.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: COLORS.primary,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  logoText: {
-    fontSize: 42,
-    fontWeight: '700',
-    color: COLORS.white,
-  },
-  churchName: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: COLORS.black,
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  churchSubtitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: COLORS.primary,
-    marginBottom: 48,
-    textAlign: 'center',
-  },
-  welcomeText: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: COLORS.black,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitleText: {
-    fontSize: 16,
-    color: COLORS.gray,
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: 56,
-    backgroundColor: COLORS.white,
-    borderRadius: 28,
-    borderWidth: 1.5,
-    borderColor: '#E0E0E0',
-    paddingHorizontal: 24,
-    shadowColor: COLORS.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  googleIconContainer: {
-    marginRight: 12,
-  },
-  googleButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: COLORS.black,
-  },
-  termsText: {
-    fontSize: 12,
-    color: COLORS.gray,
-    textAlign: 'center',
-    marginTop: 32,
-    lineHeight: 18,
-  },
-  termsLink: {
-    color: COLORS.primary,
-    fontWeight: '600',
-  },
+  checked: { backgroundColor: '#1E90FF', borderColor: '#1E90FF' },
+  rememberText: { color: '#000', fontSize: 14 },
+  loginButton: { marginTop: 20 },
+  footer: { marginTop: 30, fontSize: 13, color: '#333', textAlign: 'center', fontStyle: 'italic' },
+  signupContainer: { 
+  marginTop: 20, 
+  alignItems: 'center',
+},
+signupText: { 
+  fontSize: 14, 
+  color: '#555' 
+},
+signupLink: { 
+  color: '#1E90FF', 
+  fontWeight: '600' 
+},
 });

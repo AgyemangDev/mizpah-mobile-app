@@ -4,9 +4,17 @@ export default function Layout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="welcome" options={{ 
+        headerShown: false,
+        gestureEnabled: false,  
+         }} />
       <Stack.Screen name="login" options={{ 
         headerShown: false,
         gestureEnabled: false,  
+         }} />
+      <Stack.Screen name="SignUp" options={{ 
+        headerShown: false,
+        gestureEnabled: true,  
          }} />
     </Stack>
   );

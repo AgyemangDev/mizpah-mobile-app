@@ -256,7 +256,7 @@ export default MeetingCountdown;
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: '150%',
     paddingVertical: 12,
   },
   loadingButton: {

@@ -3,9 +3,10 @@
     "name": "mizpahapp",
     "slug": "mizpahapp",
     "version": "1.0.0",
+    "owner":"hostelhubb",
     "orientation": "portrait",
     "icon": "./assets/images/mizpah.png",
-    "scheme": "mizpahapp",
+    "scheme": "mizpah",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "updates": {
@@ -15,10 +16,13 @@
     },
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.hostelhubb.mizpahapp"
     },
     "android": {
       "versionCode": 2,
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -30,7 +34,7 @@
       "package": "com.hostelhubb.mizpahapp"
     },
     "web": {
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/mizpah.png"
     },
     "plugins": [
@@ -53,6 +57,7 @@
       "reactCompiler": true
     },
     "extra": {
+      "googleRedirectUri": "https://auth.expo.io/@hostelhubb/mizpahapp",
       "router": {},
       "eas": {
         "projectId": "6e112b3d-aee3-4156-be51-0db5691342a1"

@@ -78,7 +78,7 @@ const RequestPrayerTab = () => {
           {isAnonymous && (
             <View style={styles.noteContainer}>
               <Text style={styles.note}>
-                It’s best if you anonymously — but we respect your privacy and will keep it
+                It’s best if you don't post anonymously — but we respect your privacy and will keep it
                 confidential. 🙏
               </Text>
             </View>

@@ -256,8 +256,8 @@ export default MeetingCountdown;
 
 const styles = StyleSheet.create({
   container: {
-    width: '150%',
     paddingVertical: 12,
+    width:"91%"
   },
   loadingButton: {
     backgroundColor: '#7C3AED',
@@ -295,17 +295,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.9,
   },
-  countdownButton: {
-    backgroundColor: '#7C3AED',
-    borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
+countdownButton: {
+  backgroundColor: '#7C3AED',
+  borderRadius: 16,
+  padding: 20,
+  alignItems: 'center',
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+  elevation: 8,
+  width:"100%"
+},
   nextMeetingLabel: {
     color: '#FDE047',
     fontSize: 12,

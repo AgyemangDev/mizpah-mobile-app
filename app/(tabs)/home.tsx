@@ -2,9 +2,8 @@ import { StyleSheet, View, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth"
 import { auth } from "@/config/firebaseConfig";
-
 import MainHeader from "@/components/header/MainHeader";
 import VerseOfDayCard from "@/components/Card/VerseOfDayCard";
 import Greet from "@/components/ui/greet";
@@ -25,9 +24,7 @@ const Home = () => {
           const userData = JSON.parse(storedUser);
           const displayName =
             userData.name ||
-            userData.fullName ||
-            userData.username ||
-            userData.email?.split("@")[0] ||
+            userData.firstName ||
             "Guest";
           setName(displayName);
         } else {
@@ -50,7 +47,7 @@ const handleLogout = async () => {
     await AsyncStorage.removeItem("user"); // Remove cached user
     
     // ✅ Double safety: wait until Firebase confirms null user
-    const waitForLogout = new Promise((resolve) => {
+    const waitForLogout = new Promise((resolve)=> {
       const unsub = onAuthStateChanged(auth, (firebaseUser) => {
         if (!firebaseUser) {
           unsub();
@@ -86,11 +83,6 @@ const handleLogout = async () => {
         <RequestForPrayer />
 
         {/* Logout button */}
-        <FormButton
-          title="Log Out"
-          onPress={handleLogout}
-          style={styles.logoutButton}
-        />
       </ScrollView>
     </View>
   );
@@ -111,9 +103,5 @@ const styles = StyleSheet.create({
   greetContainer: {
     width: "90%",
     marginBottom: 0,
-  },
-  logoutButton: {
-    marginTop: 30,
-    width: "90%",
   },
 });

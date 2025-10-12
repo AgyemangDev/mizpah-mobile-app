@@ -1,11 +1,11 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { Ionicons } from '@expo/vector-icons';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { ArticlesProvider } from '@/context/ArticlesContext'; // <-- import your context
+import { ArticlesProvider } from '@/context/ArticlesContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -15,57 +15,52 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-          headerShown: false, // global removal
+          headerShown: false,
           tabBarButton: HapticTab,
         }}
       >
-        {/* Home Screen */}
+        {/* Home */}
         <Tabs.Screen
           name="home"
           options={{
-            headerShown: false,
             title: 'Home',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
           }}
         />
 
-        {/* Events Folder */}
+        {/* Events */}
         <Tabs.Screen
           name="Events"
           options={{
-            headerShown: false,
             title: 'Events',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar.badge.checkmark" color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="calendar" size={size} color={color} />,
           }}
         />
 
-        {/* Sermons Folder */}
+        {/* Sermons */}
         <Tabs.Screen
           name="Sermons"
           options={{
-            headerShown: false,
             title: 'Sermons',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="music.note.list" color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="musical-notes" size={size} color={color} />,
           }}
         />
 
-        {/* Bible Folder */}
+        {/* Bible */}
         <Tabs.Screen
           name="Bible"
           options={{
-            headerShown: false,
             title: 'Bible',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="book.fill" color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="book" size={size} color={color} />,
           }}
         />
 
-        {/* Giving Folder */}
+        {/* Giving */}
         <Tabs.Screen
           name="Giving"
           options={{
-            headerShown: false,
             title: 'Giving',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="gift.fill" color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="gift" size={size} color={color} />,
           }}
         />
       </Tabs>

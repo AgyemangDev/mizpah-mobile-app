@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { TextInput, StyleSheet, Text, View, Animated } from 'react-native';
+import { TextInput, StyleSheet, Text, View } from 'react-native';
 
 interface Props {
   value: string;
   onChangeText: (text: string) => void;
   placeholder: string;
   secureTextEntry?: boolean;
-    keyboardType?: 'default' | 'email-address' | 'phone-pad';
-
+  keyboardType?: 'default' | 'email-address' | 'phone-pad';
 }
 
 export default function FormInput({
@@ -27,7 +26,7 @@ export default function FormInput({
       <TextInput
         value={value}
         onChangeText={onChangeText}
-        placeholder={isFocused ? '' : placeholder}
+        placeholder={placeholder} // ✅ fixed
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         style={[styles.input, isFocused && styles.inputFocused]}
@@ -52,7 +51,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#aaa',
     zIndex: 1,
-    transitionDuration: '200ms',
   },
   labelFocused: {
     top: -8,
@@ -72,7 +70,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
-    elevation: 2, // for Android shadow
+    elevation: 2,
   },
   inputFocused: {
     borderColor: '#1E90FF',

@@ -46,6 +46,33 @@ const VerseOfDayCard = () => {
     }
   };
 
+  // ✨ Helper to parse <b>bold</b> tags
+  const renderVerseText = (text: string) => {
+    // Split text into normal and bold parts
+    const parts = text.split(/(<b>|<\/b>)/g).filter(Boolean);
+    let isBold = false;
+
+    return parts.map((part, index) => {
+      if (part === "<b>") {
+        isBold = true;
+        return null;
+      }
+      if (part === "</b>") {
+        isBold = false;
+        return null;
+      }
+
+      return (
+        <Text
+          key={index}
+          style={isBold ? styles.boldText : styles.normalText}
+        >
+          {part}
+        </Text>
+      );
+    });
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -60,8 +87,12 @@ const VerseOfDayCard = () => {
           <View style={styles.header}>
             {loading ? (
               <>
-                <View style={[styles.skeleton, { width: 120, height: 14, marginBottom: 5 }]} />
-                <View style={[styles.skeleton, { width: 180, height: 24 }]} />
+                <View
+                  style={[styles.skeleton, { width: 120, height: 14, marginBottom: 5 }]}
+                />
+                <View
+                  style={[styles.skeleton, { width: 180, height: 24 }]}
+                />
               </>
             ) : (
               <>
@@ -76,11 +107,16 @@ const VerseOfDayCard = () => {
           </View>
 
           {loading ? (
-            <View style={[styles.skeleton, { width: "90%", height: 80, borderRadius: 12 }]} />
+            <View
+              style={[
+                styles.skeleton,
+                { width: "90%", height: 80, borderRadius: 12 },
+              ]}
+            />
           ) : (
             <Text style={styles.verseText}>
               {verse
-                ? verse.text
+                ? renderVerseText(verse.text)
                 : "I will both lie down in peace, and sleep; For You alone, O Lord, make me dwell in safety."}
             </Text>
           )}
@@ -139,6 +175,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     lineHeight: 26,
     textAlign: "center",
+  },
+  boldText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#fff",
+  },
+  normalText: {
+    fontSize: 18,
+    fontWeight: "300",
+    color: "#fff",
   },
   skeleton: {
     backgroundColor: "rgba(255,255,255,0.3)",

@@ -31,7 +31,7 @@ export default function WelcomeScreen() {
     if (currentIndex < slides.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      router.push('/login');
+      router.replace('./login');
     }
   };
 

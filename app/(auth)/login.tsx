@@ -133,7 +133,6 @@ export default function Login() {
               onPress={handleLogin}
               disabled={!email || !password || loading}
               loading={loading}
-              style={styles.loginButton}
             />
             {loading && <ActivityIndicator size="small" color="#000" style={{ marginTop: 10 }} />}
           </View>

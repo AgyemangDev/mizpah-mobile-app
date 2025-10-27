@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "mizpahapp",
+    "name": "Mizpah App",
     "slug": "mizpahapp",
     "version": "1.0.0",
-    "owner":"hostelhubb",
+    "owner": "hostelhubb",
     "orientation": "portrait",
     "icon": "./assets/images/mizpah.png",
     "scheme": "mizpah",
@@ -12,13 +12,17 @@
     "updates": {
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 3,
+      "url": "https://u.expo.dev/6e112b3d-aee3-4156-be51-0db5691342a1"
     },
     "ios": {
       "supportsTablet": true,
       "buildNumber": "1",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "com.hostelhubb.mizpahapp"
+      "bundleIdentifier": "com.hostelhubb.mizpahapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "versionCode": 2,
@@ -50,7 +54,8 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -62,6 +67,9 @@
       "eas": {
         "projectId": "6e112b3d-aee3-4156-be51-0db5691342a1"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
